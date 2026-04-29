@@ -1,3 +1,3 @@
-# KB Studio Website
+# KB Studio 17 Website
 
-Initial website repository for kbstudio17.com
+Upload all files and the assets folder to the root of the GitHub repository.
