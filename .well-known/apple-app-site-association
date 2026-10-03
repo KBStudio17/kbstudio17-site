@@ -1,0 +1,10 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["H9XS6PTRWG.com.kbstudio.adfinem"],
+        "components": [{ "/": "/w" }, { "/": "/w/*" }]
+      }
+    ]
+  }
+}
