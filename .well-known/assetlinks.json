@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.kbstudio.adfinem",
+      "sha256_cert_fingerprints": [
+        "AA:8B:39:40:DB:F4:14:23:2C:0D:42:79:7F:E6:50:A9:28:D8:A0:66:9D:41:A0:36:87:EA:6F:01:57:B0:96:85"
+      ]
+    }
+  }
+]
