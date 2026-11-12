@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <title>Add a Piece | KB Studio 17</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="brand-mark">KB<br>17</span><span><strong>KB Studio 17</strong><small>Shop Manager</small></span></a>
+  <nav class="nav"><a href="woodworking.html#shop">View Shop</a></nav>
+</header>
+<main class="page admin-page">
+
+  <section id="login" class="callout" hidden>
+    <p class="eyebrow">Private</p>
+    <h2>Shop Manager</h2>
+    <form id="login-form" class="admin-form">
+      <label>Passphrase<input id="pass" type="password" autocomplete="current-password" required/></label>
+      <button class="button primary" type="submit">Unlock</button>
+      <p id="login-msg" class="admin-msg" role="status"></p>
+    </form>
+  </section>
+
+  <div id="app" hidden>
+    <p class="eyebrow">Shop Manager</p>
+    <h1>Add a piece</h1>
+
+    <form id="add-form" class="callout admin-form">
+      <label>Photos <span class="hint">First photo is the cover. Up to 8.</span>
+        <input id="photos" type="file" accept="image/*" multiple required/>
+      </label>
+      <div id="previews" class="admin-previews"></div>
+      <label>Name<input id="name" type="text" maxlength="80" placeholder="Walnut cutting board" required/></label>
+      <div class="admin-row">
+        <label>Price ($)<input id="price" type="text" inputmode="decimal" placeholder="85" required/></label>
+        <label>Shipping ($) <span class="hint">Blank = pickup only</span><input id="shipping" type="text" inputmode="decimal" placeholder="Pickup only"/></label>
+      </div>
+      <label>Description <span class="hint">Optional: wood, size, finish</span>
+        <textarea id="description" rows="3" maxlength="1200"></textarea>
+      </label>
+      <button id="publish" class="button primary" type="submit">Publish</button>
+      <p id="add-msg" class="admin-msg" role="status"></p>
+    </form>
+
+    <h2 class="admin-h2">Your pieces</h2>
+    <p id="list-msg" class="admin-msg" role="status"></p>
+    <div id="list" class="admin-list"></div>
+    <p class="small"><button id="logout" class="link-button" type="button">Lock this device</button></p>
+  </div>
+</main>
+<script src="shop-admin.js"></script>
+</body>
+</html>

@@ -14,3 +14,18 @@ Before launching sales, replace the temporary donation statement with the exact 
 ## Don’t Buck Nature store setup
 
 The selected print-on-demand provider is Fourthwall. After publishing the shirt product in Fourthwall, replace the placeholder `href="#"` in `dont-buck-nature.html` with the permanent Fourthwall product URL. Fourthwall supports customer checkout using PayPal and Apple Pay on compatible devices and browsers. The campaign page states that 100% of net profits from shirt sales are donated.
+
+
+## Woodworking shop
+
+The shop on `woodworking.html` is driven by `shop/inventory.json`. Pieces are added from the private page `/shop-admin.html` (photo, name, price, Publish). Every change is a normal git commit, so anything can be undone from the repo history.
+
+Files: `shop.js`, `shop-admin.html`, `shop-admin.js`, `shop/`, and the Vercel functions in `api/`.
+
+Vercel environment variables (Project → Settings → Environment Variables):
+
+- `ADMIN_PASSWORD` – passphrase for `/shop-admin.html`
+- `GITHUB_TOKEN` – fine-grained GitHub token for this repo only, with Contents: Read and write
+- `STRIPE_SECRET_KEY` – Stripe secret key (`sk_test_...` while testing, `sk_live_...` to take real payments)
+
+Optional: in Stripe, add a webhook to `https://kbstudio17.com/api/stripe-webhook` for the event `checkout.session.completed`. It marks a piece sold even if the buyer closes the tab before returning to the site.
