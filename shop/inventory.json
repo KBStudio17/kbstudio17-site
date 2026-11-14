@@ -1,3 +1,16 @@
 {
-  "items": []
+  "items": [
+    {
+      "id": "onyx-cube-0803fc",
+      "name": "Onyx Cube",
+      "price": 7500,
+      "shipping": null,
+      "description": "Black walnut tea candle holder with brass feet",
+      "photos": [
+        "shop/photos/b484cd072600167c.jpg"
+      ],
+      "status": "available",
+      "createdAt": "2026-11-14T00:30:27.872Z"
+    }
+  ]
 }
