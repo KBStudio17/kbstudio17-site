@@ -22,8 +22,9 @@
       "photos": [
         "shop/photos/b484cd072600167c.jpg"
       ],
-      "status": "available",
-      "createdAt": "2026-11-14T00:30:27.872Z"
+      "status": "sold",
+      "createdAt": "2026-11-14T00:30:27.872Z",
+      "soldAt": "2026-11-14T00:51:25.845Z"
     }
   ]
 }
