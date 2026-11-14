@@ -9,8 +9,9 @@
       "photos": [
         "shop/photos/af16874bbaa79991.jpg"
       ],
-      "status": "available",
-      "createdAt": "2026-11-14T00:31:53.247Z"
+      "status": "sold",
+      "createdAt": "2026-11-14T00:31:53.247Z",
+      "soldAt": "2026-11-14T00:51:20.473Z"
     },
     {
       "id": "onyx-cube-0803fc",
