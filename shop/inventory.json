@@ -1,6 +1,18 @@
 {
   "items": [
     {
+      "id": "cornucopia-1e7396",
+      "name": "Cornucopia",
+      "price": 13500,
+      "shipping": null,
+      "description": "Juniper root tea candle holder with brass legs",
+      "photos": [
+        "shop/photos/af16874bbaa79991.jpg"
+      ],
+      "status": "available",
+      "createdAt": "2026-11-14T00:31:53.247Z"
+    },
+    {
       "id": "onyx-cube-0803fc",
       "name": "Onyx Cube",
       "price": 7500,
