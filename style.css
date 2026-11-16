@@ -34,8 +34,8 @@
 .shop-empty{grid-column:1/-1;margin:0;padding:34px;border:1px dashed var(--line);color:var(--muted);text-align:center}
 .shop-card{display:flex;flex-direction:column;border:1px solid var(--line);background:linear-gradient(180deg,rgba(26,25,21,.9),rgba(12,12,10,.94));box-shadow:var(--shadow);cursor:pointer;overflow:hidden;transition:.25s ease}
 .shop-card:hover,.shop-card:focus-visible{transform:translateY(-5px);border-color:rgba(224,181,107,.55);outline:0}
-.shop-photo{position:relative;aspect-ratio:4/3;background:#11100d;border-bottom:1px solid var(--line)}
-.shop-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.shop-photo{position:relative;aspect-ratio:4/5;background:#11100d;border-bottom:1px solid var(--line)}
+.shop-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
 .shop-card.is-sold .shop-photo img{filter:saturate(.45) brightness(.72)}
 .shop-badge{position:absolute;top:14px;left:14px;padding:5px 12px;border:1px solid var(--gold);background:rgba(7,7,6,.88);color:var(--gold-bright);font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:.74rem}
 .shop-card-copy{display:flex;flex-direction:column;gap:10px;flex:1;padding:20px 22px 22px}
@@ -49,7 +49,7 @@ button.button:disabled{opacity:.6;cursor:wait;transform:none}
 .shop-dialog{width:min(980px,calc(100% - 28px));max-height:calc(100dvh - 28px);padding:0;border:1px solid var(--gold);background:#0d0c0a;color:var(--text);box-shadow:var(--shadow);overflow:auto}
 .shop-dialog::backdrop{background:rgba(0,0,0,.78);backdrop-filter:blur(4px)}
 .shop-dialog-body{display:grid;grid-template-columns:1.15fr .85fr}
-.shop-dialog-main{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#11100d}
+.shop-dialog-main{width:100%;max-height:min(78dvh,760px);object-fit:contain;display:block;background:#11100d}
 .shop-thumbs{display:flex;gap:8px;padding:10px;overflow-x:auto}
 .shop-thumbs button{flex:0 0 72px;height:54px;padding:0;border:1px solid var(--line);background:none;cursor:pointer}
 .shop-thumbs button:hover,.shop-thumbs button:focus-visible{border-color:var(--gold)}
@@ -90,3 +90,41 @@ button.button:disabled{opacity:.6;cursor:wait;transform:none}
 .link-button{padding:6px 0;border:0;background:none;color:var(--gold);font:inherit;font-size:.9rem;text-decoration:underline;cursor:pointer}
 @media(max-width:480px){.admin-row{grid-template-columns:1fr}}
 .shop-owner{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:26px 0 0}.shop-owner span{color:var(--soft);font-size:.88rem}
+
+/* Shop mark, New badge, reviews */
+.shop-mark{display:block;width:92px;height:auto;margin:0 0 18px}
+.shop-badge.is-new{border-color:var(--gold-bright);background:var(--gold);color:#120e08}
+.reviews{margin:0 0 72px;scroll-margin-top:110px}
+.reviews-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.reviews-summary{margin:10px 0 0;color:var(--muted)}
+.stars{color:var(--gold-bright);letter-spacing:.12em;font-size:1.05rem;white-space:nowrap}
+.reviews-list{margin-top:26px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.review-card{display:flex;flex-direction:column;gap:12px;padding:24px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(26,25,21,.9),rgba(12,12,10,.94))}
+.review-card p{margin:0}
+.review-text{color:var(--text);white-space:pre-line}
+.review-name{color:var(--muted);font-size:.9rem;margin-top:auto}
+.review-photos{display:flex;gap:8px;flex-wrap:wrap}
+.review-photos button{width:84px;height:84px;padding:0;border:1px solid var(--line);background:#11100d;cursor:pointer}
+.review-photos button:hover,.review-photos button:focus-visible{border-color:var(--gold)}
+.review-photos img{width:100%;height:100%;object-fit:cover;display:block}
+.reviews-empty{grid-column:1/-1;margin:0;padding:30px;border:1px dashed var(--line);color:var(--muted);text-align:center}
+.review-dialog{width:min(560px,calc(100% - 28px));max-height:calc(100dvh - 28px);padding:0;border:1px solid var(--gold);background:#0d0c0a;color:var(--text);box-shadow:var(--shadow);overflow:auto}
+.review-dialog::backdrop{background:rgba(0,0,0,.78);backdrop-filter:blur(4px)}
+.review-form{position:relative;padding:clamp(22px,4vw,36px)}.review-form .shop-close{position:absolute;top:0;right:0;float:none;margin:0}.review-form h2{padding-right:44px}
+.review-form h2{font-size:1.8rem;margin:0 0 4px}
+.star-pick{display:flex;flex-direction:row-reverse;justify-content:flex-end;gap:4px;border:0;padding:0;margin:0}
+.star-label{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.82rem;color:var(--gold);margin-bottom:-10px}
+.star-pick input{position:absolute;opacity:0;width:1px;height:1px}
+.star-pick label{display:block;font-size:2.3rem;line-height:1;color:var(--soft);cursor:pointer;letter-spacing:0}
+.star-pick input:checked~label,.star-pick label:hover,.star-pick label:hover~label{color:var(--gold-bright)}
+.star-pick input:focus-visible+label{outline:2px solid var(--gold);outline-offset:2px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.photo-view{max-width:min(92vw,900px);max-height:92dvh;padding:0;border:1px solid var(--gold);background:#0d0c0a}
+.photo-view::backdrop{background:rgba(0,0,0,.85)}
+.photo-view img{display:block;max-width:100%;max-height:90dvh}
+.admin-review{display:grid;gap:10px;padding:14px;border:1px solid var(--line);background:rgba(18,17,14,.76)}
+.admin-review strong{color:var(--text)}
+.admin-review-text{margin:0;white-space:pre-line;color:var(--muted)}
+.admin-review .admin-actions{align-items:center}
+@media(max-width:980px){.reviews-list{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.reviews-list{grid-template-columns:1fr}}

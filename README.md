@@ -29,3 +29,9 @@ Vercel environment variables (Project → Settings → Environment Variables):
 - `STRIPE_SECRET_KEY` – Stripe secret key (`sk_test_...` while testing, `sk_live_...` to take real payments)
 
 Optional: in Stripe, add a webhook to `https://kbstudio17.com/api/stripe-webhook` for the event `checkout.session.completed`. It marks a piece sold even if the buyer closes the tab before returning to the site.
+
+### Reviews
+
+Visitors leave a review (name, stars, text, optional photos) from the Reviews section on `woodworking.html`. Nothing shows publicly until it is approved in the Shop Manager. Because this repository is public, reviews awaiting approval are stored encrypted in `shop/reviews-pending/`; approved reviews live in `shop/reviews.json` with photos in `shop/review-photos/`. At most 25 reviews can wait at once.
+
+`kbstudio17.com/shop` redirects to the shop section. The woodworking mark is `shop/kb-nail-heart-logo.svg`.

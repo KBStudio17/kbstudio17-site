@@ -8,6 +8,8 @@ const BRANCH = process.env.GITHUB_BRANCH || 'main';
 const GITHUB_API = process.env.GITHUB_API_URL || 'https://api.github.com';
 const STRIPE_API = process.env.STRIPE_API_URL || 'https://api.stripe.com';
 const INVENTORY_PATH = 'shop/inventory.json';
+const REVIEWS_PATH = 'shop/reviews.json';
+const PENDING_DIR = 'shop/reviews-pending';
 
 function need(name) {
   const v = process.env[name];
@@ -48,44 +50,99 @@ async function headSha() {
   return ref.object.sha;
 }
 
-async function readInventory(ref) {
+async function readJson(path, fallback, ref) {
   try {
-    const f = await gh(`/contents/${INVENTORY_PATH}?ref=${ref || BRANCH}`);
-    const inv = JSON.parse(Buffer.from(f.content, 'base64').toString('utf8'));
-    if (!Array.isArray(inv.items)) inv.items = [];
-    return inv;
+    const f = await gh(`/contents/${path}?ref=${ref || BRANCH}`);
+    const data = JSON.parse(Buffer.from(f.content, 'base64').toString('utf8'));
+    for (const k of Object.keys(fallback)) if (!Array.isArray(data[k])) data[k] = [];
+    return data;
   } catch (e) {
-    if (e.githubStatus === 404) return { items: [] };
+    if (e.githubStatus === 404) return JSON.parse(JSON.stringify(fallback));
     throw e;
   }
 }
+const readInventory = (ref) => readJson(INVENTORY_PATH, { items: [] }, ref);
 
-// Read the inventory at the branch head, apply `mutate`, and commit the result
-// (plus any photo blobs / deletions) as ONE commit. Retries if the branch moved.
-async function updateInventory(mutate, message) {
+// Read a JSON file at the branch head, apply `mutate`, and commit the result
+// (plus any added blobs / deletions) as ONE commit. Retries if the branch moved.
+async function updateJson(path, fallback, mutate, message) {
   let lastErr;
   for (let attempt = 0; attempt < 3; attempt++) {
     const parent = await headSha();
-    const inv = await readInventory(parent);
-    const extra = (await mutate(inv)) || {};
-    if (extra.skip) return inv;
+    const data = await readJson(path, fallback, parent);
+    const extra = (await mutate(data)) || {};
+    if (extra.skip) return data;
     const parentCommit = await gh(`/git/commits/${parent}`);
     const tree = [
-      { path: INVENTORY_PATH, mode: '100644', type: 'blob', content: JSON.stringify(inv, null, 2) + '\n' },
+      { path, mode: '100644', type: 'blob', content: JSON.stringify(data, null, 2) + '\n' },
       ...(extra.add || []).map((p) => ({ path: p.path, mode: '100644', type: 'blob', sha: p.sha })),
-      ...(extra.remove || []).map((path) => ({ path, mode: '100644', type: 'blob', sha: null })),
+      ...(extra.remove || []).map((rm) => ({ path: rm, mode: '100644', type: 'blob', sha: null })),
     ];
     try {
       const newTree = await gh('/git/trees', { method: 'POST', body: { base_tree: parentCommit.tree.sha, tree } });
       const commit = await gh('/git/commits', { method: 'POST', body: { message, tree: newTree.sha, parents: [parent] } });
       await gh(`/git/refs/heads/${BRANCH}`, { method: 'PATCH', body: { sha: commit.sha } });
-      return inv;
+      return data;
     } catch (e) {
       lastErr = e;
       if (e.githubStatus !== 422 && e.githubStatus !== 409) throw e;
     }
   }
   throw lastErr;
+}
+
+const updateInventory = (mutate, message) => updateJson(INVENTORY_PATH, { items: [] }, mutate, message);
+const readReviews = () => readJson(REVIEWS_PATH, { reviews: [] });
+const updateReviews = (mutate, message) => updateJson(REVIEWS_PATH, { reviews: [] }, mutate, message);
+
+// Commit file additions / deletions without touching a JSON file.
+async function commitFiles({ add = [], remove = [] }, message) {
+  const parent = await headSha();
+  const parentCommit = await gh(`/git/commits/${parent}`);
+  const tree = [
+    ...add.map((p) => ({ path: p.path, mode: '100644', type: 'blob', sha: p.sha })),
+    ...remove.map((rm) => ({ path: rm, mode: '100644', type: 'blob', sha: null })),
+  ];
+  const newTree = await gh('/git/trees', { method: 'POST', body: { base_tree: parentCommit.tree.sha, tree } });
+  const commit = await gh('/git/commits', { method: 'POST', body: { message, tree: newTree.sha, parents: [parent] } });
+  await gh(`/git/refs/heads/${BRANCH}`, { method: 'PATCH', body: { sha: commit.sha } });
+}
+
+async function listDir(dir) {
+  try {
+    const list = await gh(`/contents/${dir}?ref=${BRANCH}`);
+    return Array.isArray(list) ? list.filter((f) => f.type === 'file') : [];
+  } catch (e) {
+    if (e.githubStatus === 404) return [];
+    throw e;
+  }
+}
+
+async function createBlob(base64) {
+  const blob = await gh('/git/blobs', { method: 'POST', body: { content: base64, encoding: 'base64' } });
+  return blob.sha;
+}
+
+async function readBlob(sha) {
+  const blob = await gh(`/git/blobs/${sha}`);
+  return Buffer.from(blob.content, 'base64');
+}
+
+// Reviews awaiting approval are stored encrypted, because the repository is public.
+// The key comes from a server-side secret, so nobody browsing GitHub can read them.
+function sealKey() {
+  return crypto.createHash('sha256').update('kb-shop-reviews:' + need('GITHUB_TOKEN')).digest();
+}
+function seal(obj) {
+  const iv = crypto.randomBytes(12);
+  const c = crypto.createCipheriv('aes-256-gcm', sealKey(), iv);
+  const body = Buffer.concat([c.update(JSON.stringify(obj), 'utf8'), c.final()]);
+  return Buffer.concat([iv, c.getAuthTag(), body]);
+}
+function unseal(buf) {
+  const d = crypto.createDecipheriv('aes-256-gcm', sealKey(), buf.subarray(0, 12));
+  d.setAuthTag(buf.subarray(12, 28));
+  return JSON.parse(Buffer.concat([d.update(buf.subarray(28)), d.final()]).toString('utf8'));
 }
 
 function formEncode(obj, prefix, out = new URLSearchParams()) {
@@ -154,4 +211,7 @@ function fail(res, e) {
   res.status(e.status || 500).json({ error: e.status ? e.message : 'Something went wrong. Please try again.' });
 }
 
-module.exports = { gh, readInventory, updateInventory, stripe, markSoldFromSession, checkAdmin, body, fail, crypto };
+module.exports = {
+  gh, readInventory, updateInventory, updateReviews, readReviews, commitFiles, listDir, createBlob, readBlob, seal, unseal,
+  stripe, markSoldFromSession, checkAdmin, body, fail, crypto, PENDING_DIR,
+};

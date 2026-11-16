@@ -39,6 +39,23 @@
           "value": "no-cache"
         }
       ]
+    },
+    {
+      "source": "/shop/reviews.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
     }
-  ]
+  ],
+  "redirects": [
+    {
+      "source": "/shop",
+      "destination": "/woodworking.html#shop",
+      "permanent": false
+    }
+  ],
+  "ignoreCommand": "git log -1 --pretty=%s | grep -q '^Shop: review \\(received\\|declined\\)'"
 }

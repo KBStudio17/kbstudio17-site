@@ -1,5 +1,13 @@
 // POST { action, ... } with header x-admin-key. Powers the private Add Piece page.
-const { gh, readInventory, updateInventory, checkAdmin, body, fail, crypto } = require('./_lib');
+const {
+  gh, readInventory, updateInventory, updateReviews, readReviews, commitFiles, listDir, createBlob, readBlob, unseal,
+  checkAdmin, body, fail, crypto, PENDING_DIR,
+} = require('./_lib');
+
+async function pendingFile(id) {
+  if (!/^[0-9a-f]{16}$/.test(String(id || ''))) return null;
+  return (await listDir(PENDING_DIR)).find((f) => f.name === `${id}.enc`) || null;
+}
 
 const bad = (msg) => Object.assign(new Error(msg), { status: 400 });
 
@@ -77,6 +85,61 @@ module.exports = async (req, res) => {
         const [gone] = inv.items.splice(i, 1);
         return { remove: gone.photos || [] };
       }, `Shop: remove "${b.id}"`);
+      return res.status(200).json({ ok: true });
+    }
+
+    // ---- Reviews ----
+    if (b.action === 'reviews') {
+      const pending = [];
+      for (const f of (await listDir(PENDING_DIR)).filter((x) => x.name.endsWith('.enc'))) {
+        const id = f.name.replace(/\.enc$/, '');
+        try {
+          const r = unseal(await readBlob(f.sha));
+          pending.push({ id, name: r.name, stars: r.stars, text: r.text, createdAt: r.createdAt, photoCount: (r.photos || []).length });
+        } catch (e) {
+          pending.push({ id, unreadable: true });
+        }
+      }
+      pending.sort((x, y) => String(y.createdAt || '').localeCompare(String(x.createdAt || '')));
+      return res.status(200).json({ pending, published: (await readReviews()).reviews });
+    }
+
+    if (b.action === 'review-photos') {
+      const f = await pendingFile(b.id);
+      if (!f) throw bad('That review could not be found.');
+      return res.status(200).json({ photos: unseal(await readBlob(f.sha)).photos || [] });
+    }
+
+    if (b.action === 'review-approve') {
+      const f = await pendingFile(b.id);
+      if (!f) throw bad('That review could not be found.');
+      const r = unseal(await readBlob(f.sha));
+      const photos = [];
+      for (const data of r.photos || []) {
+        photos.push({ sha: await createBlob(data), path: `shop/review-photos/${crypto.randomBytes(8).toString('hex')}.jpg` });
+      }
+      const review = { id: b.id, name: r.name, stars: r.stars, text: r.text, photos: photos.map((p) => p.path), createdAt: r.createdAt };
+      await updateReviews((data) => {
+        if (!data.reviews.some((x) => x.id === review.id)) data.reviews.unshift(review);
+        return { add: photos, remove: [f.path] };
+      }, 'Shop: approve review');
+      return res.status(200).json({ ok: true });
+    }
+
+    if (b.action === 'review-delete') {
+      const f = await pendingFile(b.id);
+      if (!f) throw bad('That review could not be found.');
+      await commitFiles({ remove: [f.path] }, 'Shop: review declined');
+      return res.status(200).json({ ok: true });
+    }
+
+    if (b.action === 'review-remove') {
+      await updateReviews((data) => {
+        const i = data.reviews.findIndex((x) => x.id === b.id);
+        if (i < 0) throw bad('That review could not be found.');
+        const [gone] = data.reviews.splice(i, 1);
+        return { remove: gone.photos || [] };
+      }, 'Shop: remove review');
       return res.status(200).json({ ok: true });
     }
 

@@ -81,6 +81,7 @@
     dialog.showModal();
   }
 
+  function isNew(item) { var t = Date.parse(item.createdAt || ''); return t && Date.now() - t < 14 * 864e5; }
   function card(item) {
     var sold = item.status === 'sold';
     return el('article', { class: 'shop-card' + (sold ? ' is-sold' : ''), tabindex: '0', role: 'button', 'aria-label': item.name + (sold ? ' (sold)' : ''),
@@ -88,7 +89,7 @@
       onkeydown: function (e) { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(item); } } }, [
       el('div', { class: 'shop-photo' }, [
         el('img', { src: item.photos[0] || '', alt: item.name, loading: 'lazy' }),
-        sold ? el('span', { class: 'shop-badge', text: 'Sold' }) : null
+        sold ? el('span', { class: 'shop-badge', text: 'Sold' }) : (isNew(item) ? el('span', { class: 'shop-badge is-new', text: 'New' }) : null)
       ]),
       el('div', { class: 'shop-card-copy' }, [
         el('h3', { text: item.name }),
