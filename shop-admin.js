@@ -27,7 +27,7 @@
     try { localStorage.removeItem('kb-shop-key'); } catch (e) {}
     $('app').hidden = true; $('login').hidden = false;
   }
-  function unlock() { $('login').hidden = true; $('app').hidden = false; refresh(); }
+  function unlock() { $('login').hidden = true; $('app').hidden = false; refresh(); refreshReviews(); }
 
   // Shrink a phone photo to a web-sized JPEG in the browser before upload.
   function shrink(file) {
@@ -121,6 +121,50 @@
       if (!d.items.length) { list.textContent = 'Nothing posted yet.'; return; }
       list.replaceChildren.apply(list, d.items.map(row));
     }).catch(function (e) { if (key) msg('list-msg', e.message, 'warn'); });
+  }
+
+  // ---- Reviews ----
+  function stars(n) { return '\u2605\u2605\u2605\u2605\u2605'.slice(0, n) + '\u2606\u2606\u2606\u2606\u2606'.slice(0, 5 - n); }
+  function revChange(payload, working) {
+    msg('rev-msg', working);
+    return api(payload).then(function () { msg('rev-msg', 'Saved. The site updates in about a minute.', 'good'); return refreshReviews(); })
+      .catch(function (e) { msg('rev-msg', e.message, 'warn'); });
+  }
+  function reviewCard(r, pending) {
+    var div = document.createElement('div'); div.className = 'admin-review';
+    function add(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; n.textContent = text; div.appendChild(n); return n; }
+    if (r.unreadable) {
+      add('p', '', 'This review could not be opened (it was saved before a settings change).');
+    } else {
+      add('strong', '', r.name + '  ' + stars(r.stars));
+      add('p', 'admin-review-text', r.text);
+    }
+    var photos = document.createElement('div'); photos.className = 'admin-previews'; div.appendChild(photos);
+    if (pending && r.photoCount) {
+      api({ action: 'review-photos', id: r.id }).then(function (d) {
+        d.photos.forEach(function (p) { var i = new Image(); i.alt = ''; i.src = 'data:image/jpeg;base64,' + p; photos.appendChild(i); });
+      }).catch(function () {});
+    } else if (!pending) {
+      (r.photos || []).forEach(function (p) { var i = new Image(); i.alt = ''; i.src = p; photos.appendChild(i); });
+    }
+    var actions = document.createElement('div'); actions.className = 'admin-actions'; div.appendChild(actions);
+    function b(label, cls, fn) { var x = document.createElement('button'); x.type = 'button'; x.className = cls; x.textContent = label; x.addEventListener('click', fn); actions.appendChild(x); }
+    if (pending) {
+      if (!r.unreadable) b('Approve', 'button primary small-button', function () { revChange({ action: 'review-approve', id: r.id }, 'Publishing review…'); });
+      b('Delete', 'link-button', function () { if (window.confirm('Delete this review? It will not be published.')) revChange({ action: 'review-delete', id: r.id }, 'Deleting…'); });
+    } else {
+      b('Remove from site', 'link-button', function () { if (window.confirm('Remove this published review from the site?')) revChange({ action: 'review-remove', id: r.id }, 'Removing…'); });
+    }
+    return div;
+  }
+  function refreshReviews() {
+    return api({ action: 'reviews' }).then(function (d) {
+      var p = $('rev-pending'), q = $('rev-published');
+      if (d.pending.length) p.replaceChildren.apply(p, d.pending.map(function (r) { return reviewCard(r, true); }));
+      else p.textContent = 'No reviews waiting.';
+      if (d.published.length) q.replaceChildren.apply(q, d.published.map(function (r) { return reviewCard(r, false); }));
+      else q.textContent = 'No published reviews yet.';
+    }).catch(function (e) { if (key) msg('rev-msg', e.message, 'warn'); });
   }
 
   $('login-form').addEventListener('submit', function (e) {
