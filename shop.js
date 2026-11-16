@@ -32,7 +32,11 @@
   function action(item, big) {
     var cls = 'button ' + (big ? '' : 'small-button ');
     if (item.status === 'sold') {
-      return el('a', { class: cls + 'secondary', href: requestLink(item), text: 'Request one like this', onclick: function (e) { e.stopPropagation(); } });
+      // Sold: the purchase button stays in place but greyed out, with a quiet link to ask for something similar.
+      return el('div', { class: 'shop-sold-actions' }, [
+        el('button', { class: cls + 'primary is-soldout', type: 'button', disabled: '', text: 'Sold' }),
+        el('a', { class: 'shop-request', href: requestLink(item), text: 'Request one like this' })
+      ]);
     }
     return el('button', { class: cls + 'primary', type: 'button', text: 'Buy · ' + money(item.price), onclick: function (e) { e.stopPropagation(); buy(item, e.currentTarget); } });
   }
@@ -81,7 +85,6 @@
     dialog.showModal();
   }
 
-  function isNew(item) { var t = Date.parse(item.createdAt || ''); return t && Date.now() - t < 14 * 864e5; }
   function card(item) {
     var sold = item.status === 'sold';
     // Sold pieces are a record only: one photo, no detail view. Available pieces open to all their photos.
@@ -93,9 +96,7 @@
     }
     return el('article', attrs, [
       el('div', { class: 'shop-photo' }, [
-        el('img', { src: item.photos[0] || '', alt: item.name + (sold ? ' (sold)' : ''), loading: 'lazy' }),
-        sold ? el('span', { class: 'shop-badge', text: 'Sold' }) : (isNew(item) ? el('span', { class: 'shop-badge is-new', text: 'New' }) : null),
-        !sold && item.photos.length > 1 ? el('span', { class: 'shop-count', text: item.photos.length + ' photos' }) : null
+        el('img', { src: item.photos[0] || '', alt: item.name + (sold ? ' (sold)' : ''), loading: 'lazy' })
       ]),
       el('div', { class: 'shop-card-copy' }, [
         el('h3', { text: item.name }),
