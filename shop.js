@@ -96,7 +96,8 @@
     }
     return el('article', attrs, [
       el('div', { class: 'shop-photo' }, [
-        el('img', { src: item.photos[0] || '', alt: item.name + (sold ? ' (sold)' : ''), loading: 'lazy' })
+        el('img', { src: item.photos[0] || '', alt: item.name + (sold ? ' (sold)' : ''), loading: 'lazy' }),
+        sold ? el('span', { class: 'shop-badge', text: 'Sold' }) : null
       ]),
       el('div', { class: 'shop-card-copy' }, [
         el('h3', { text: item.name }),
