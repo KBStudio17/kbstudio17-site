@@ -52,16 +52,33 @@
     });
   }
 
+  // Photos add up: each pick is appended, so photos can be chosen in several goes.
+  function drawPreviews() {
+    $('previews').replaceChildren.apply($('previews'), chosen.map(function (u, i) {
+      var wrap = document.createElement('span'); wrap.className = 'admin-thumb' + (i === 0 ? ' is-cover' : '');
+      var img = new Image(); img.src = u; img.alt = '';
+      var x = document.createElement('button'); x.type = 'button'; x.textContent = '✕'; x.setAttribute('aria-label', 'Remove photo ' + (i + 1));
+      x.addEventListener('click', function () { chosen.splice(i, 1); drawPreviews(); });
+      wrap.appendChild(img); wrap.appendChild(x);
+      if (i > 0) {
+        var c = document.createElement('button'); c.type = 'button'; c.className = 'admin-thumb-cover'; c.textContent = 'Make cover';
+        c.addEventListener('click', function () { chosen.unshift(chosen.splice(i, 1)[0]); drawPreviews(); });
+        wrap.appendChild(c);
+      }
+      return wrap;
+    }));
+  }
   $('photos').addEventListener('change', function () {
-    var files = Array.prototype.slice.call(this.files, 0, 8);
-    msg('add-msg', files.length ? 'Preparing photos…' : '');
+    var input = this;
+    var files = Array.prototype.slice.call(input.files, 0, Math.max(0, 8 - chosen.length));
+    if (!files.length) { if (input.files.length) msg('add-msg', 'A piece can have up to 8 photos.', 'warn'); input.value = ''; return; }
+    msg('add-msg', 'Preparing photos…');
     $('publish').disabled = true;
     Promise.all(files.map(shrink)).then(function (urls) {
-      chosen = urls;
-      $('previews').replaceChildren.apply($('previews'), urls.map(function (u) { var i = new Image(); i.src = u; i.alt = ''; return i; }));
-      msg('add-msg', '');
-    }).catch(function (e) { chosen = []; $('previews').replaceChildren(); msg('add-msg', e.message, 'warn'); })
-      .then(function () { $('publish').disabled = false; });
+      chosen = chosen.concat(urls); drawPreviews();
+      msg('add-msg', chosen.length + (chosen.length === 1 ? ' photo ready. Tap Photos again to add more.' : ' photos ready.'));
+    }).catch(function (e) { msg('add-msg', e.message, 'warn'); })
+      .then(function () { $('publish').disabled = false; input.value = ''; });
   });
 
   $('add-form').addEventListener('submit', function (e) {
@@ -111,7 +128,43 @@
     b('Remove', function () {
       if (window.confirm('Remove “' + item.name + '” and its photos from the shop?')) change({ action: 'remove', id: item.id }, 'Removing…');
     });
-    div.appendChild(img); div.appendChild(info); div.appendChild(actions);
+    var add = document.createElement('input'); add.type = 'file'; add.accept = 'image/*'; add.multiple = true; add.hidden = true;
+    add.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(add.files, 0, Math.max(0, 8 - item.photos.length));
+      add.value = '';
+      if (!files.length) { msg('list-msg', 'This piece already has 8 photos.', 'warn'); return; }
+      msg('list-msg', 'Preparing photos…');
+      var uploaded = [];
+      Promise.all(files.map(shrink)).then(function (urls) {
+        var chain = Promise.resolve();
+        urls.forEach(function (u, i) {
+          chain = chain.then(function () {
+            msg('list-msg', 'Uploading photo ' + (i + 1) + ' of ' + urls.length + '…');
+            return api({ action: 'photo', data: u.split(',')[1] }).then(function (p) { uploaded.push(p); });
+          });
+        });
+        return chain;
+      }).then(function () { return change({ action: 'add-photos', id: item.id, photos: uploaded }, 'Saving…'); })
+        .catch(function (e) { msg('list-msg', e.message, 'warn'); });
+    });
+    b('Add photos', function () { add.click(); });
+    var strip = document.createElement('div'); strip.className = 'admin-photos';
+    (item.photos || []).forEach(function (path, i) {
+      var wrap = document.createElement('span'); wrap.className = 'admin-thumb' + (i === 0 ? ' is-cover' : '');
+      var t = new Image(); t.src = path; t.alt = ''; wrap.appendChild(t);
+      if (item.photos.length > 1) {
+        var x = document.createElement('button'); x.type = 'button'; x.textContent = '✕'; x.setAttribute('aria-label', 'Remove photo ' + (i + 1));
+        x.addEventListener('click', function () { if (window.confirm('Remove this photo from “' + item.name + '”?')) change({ action: 'remove-photo', id: item.id, path: path }, 'Removing photo…'); });
+        wrap.appendChild(x);
+      }
+      if (i > 0) {
+        var c = document.createElement('button'); c.type = 'button'; c.className = 'admin-thumb-cover'; c.textContent = 'Make cover';
+        c.addEventListener('click', function () { change({ action: 'cover-photo', id: item.id, path: path }, 'Saving…'); });
+        wrap.appendChild(c);
+      }
+      strip.appendChild(wrap);
+    });
+    div.appendChild(img); div.appendChild(info); div.appendChild(strip); div.appendChild(actions); div.appendChild(add);
     return div;
   }
 

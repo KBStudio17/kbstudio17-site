@@ -62,6 +62,43 @@ module.exports = async (req, res) => {
       return res.status(200).json({ ok: true, item });
     }
 
+    if (b.action === 'add-photos') {
+      const photos = (Array.isArray(b.photos) ? b.photos : [])
+        .filter((p) => /^[0-9a-f]{40,64}$/.test(p.sha || '') && /^shop\/photos\/[0-9a-f]{16}\.jpg$/.test(p.path || ''));
+      if (!photos.length) throw bad('Choose at least one photo.');
+      let updated;
+      await updateInventory((inv) => {
+        const item = inv.items.find((i) => i.id === b.id);
+        if (!item) throw bad('That piece could not be found.');
+        const room = 8 - item.photos.length;
+        if (room <= 0) throw bad('This piece already has 8 photos. Remove one first.');
+        const adding = photos.slice(0, room);
+        item.photos.push(...adding.map((p) => p.path));
+        updated = item;
+        return { add: adding };
+      }, `Shop: add photos to "${b.id}"`);
+      return res.status(200).json({ ok: true, item: updated });
+    }
+
+    if (b.action === 'remove-photo' || b.action === 'cover-photo') {
+      let updated;
+      await updateInventory((inv) => {
+        const item = inv.items.find((i) => i.id === b.id);
+        if (!item) throw bad('That piece could not be found.');
+        const at = item.photos.indexOf(b.path);
+        if (at < 0) throw bad('That photo could not be found.');
+        updated = item;
+        if (b.action === 'cover-photo') {
+          item.photos.unshift(item.photos.splice(at, 1)[0]);
+          return {};
+        }
+        if (item.photos.length < 2) throw bad('A piece needs at least one photo.');
+        item.photos.splice(at, 1);
+        return { remove: [b.path] };
+      }, `Shop: update photos for "${b.id}"`);
+      return res.status(200).json({ ok: true, item: updated });
+    }
+
     if (b.action === 'update') {
       let updated;
       await updateInventory((inv) => {
