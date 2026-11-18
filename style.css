@@ -36,13 +36,19 @@
 .shop-card:hover,.shop-card:focus-visible{transform:translateY(-5px);border-color:rgba(224,181,107,.55);outline:0}
 .shop-photo{position:relative;aspect-ratio:4/5;background:#11100d;border-bottom:1px solid var(--line)}
 .shop-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
-.shop-card.is-sold .shop-photo img{filter:saturate(.45) brightness(.72)}
 .shop-badge{position:absolute;top:14px;left:14px;padding:5px 12px;border:1px solid var(--gold);background:rgba(7,7,6,.88);color:var(--gold-bright);font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:.74rem}
 .shop-card-copy{display:flex;flex-direction:column;gap:10px;flex:1;padding:20px 22px 22px}
 .shop-card-copy h3{font-size:1.35rem;line-height:1.1}
 .shop-price{margin:0;color:var(--gold-bright);font-family:Oswald,sans-serif;letter-spacing:.1em;font-size:1.05rem}
 .shop-card.is-sold .shop-price{color:var(--muted)}
 .shop-card-copy .button{margin-top:auto}
+.shop-card.is-sold{cursor:default}.shop-card.is-sold:hover{transform:none;border-color:var(--line)}
+.shop-card-desc{margin:0;color:var(--muted);font-size:.92rem}
+.shop-sold-actions{display:grid;gap:10px;margin-top:auto;width:100%}
+.shop-card-copy .shop-sold-actions .button{margin-top:0}
+button.button.is-soldout,button.button.is-soldout:disabled{background:#2a2925;border-color:#3a3833;color:#8a8478;opacity:1;cursor:not-allowed;box-shadow:none}
+.shop-request{color:var(--muted);font-size:.86rem;text-decoration:underline;text-underline-offset:3px}
+.shop-request:hover{color:var(--gold-bright)}
 .small-button{min-height:44px;padding:0 18px;font-size:.8rem}
 button.button{cursor:pointer;font-weight:500}
 button.button:disabled{opacity:.6;cursor:wait;transform:none}

@@ -32,7 +32,11 @@
   function action(item, big) {
     var cls = 'button ' + (big ? '' : 'small-button ');
     if (item.status === 'sold') {
-      return el('a', { class: cls + 'secondary', href: requestLink(item), text: 'Request one like this', onclick: function (e) { e.stopPropagation(); } });
+      // Sold: the purchase button stays in place but greyed out, with a quiet link to ask for something similar.
+      return el('div', { class: 'shop-sold-actions' }, [
+        el('button', { class: cls + 'primary is-soldout', type: 'button', disabled: '', text: 'Sold' }),
+        el('a', { class: 'shop-request', href: requestLink(item), text: 'Request one like this' })
+      ]);
     }
     return el('button', { class: cls + 'primary', type: 'button', text: 'Buy · ' + money(item.price), onclick: function (e) { e.stopPropagation(); buy(item, e.currentTarget); } });
   }
@@ -81,19 +85,24 @@
     dialog.showModal();
   }
 
-  function isNew(item) { var t = Date.parse(item.createdAt || ''); return t && Date.now() - t < 14 * 864e5; }
   function card(item) {
     var sold = item.status === 'sold';
-    return el('article', { class: 'shop-card' + (sold ? ' is-sold' : ''), tabindex: '0', role: 'button', 'aria-label': item.name + (sold ? ' (sold)' : ''),
-      onclick: function () { open(item); },
-      onkeydown: function (e) { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(item); } } }, [
+    // Sold pieces are a record only: one photo, no detail view. Available pieces open to all their photos.
+    var attrs = { class: 'shop-card' + (sold ? ' is-sold' : '') };
+    if (!sold) {
+      attrs.tabindex = '0'; attrs.role = 'button'; attrs['aria-label'] = item.name;
+      attrs.onclick = function () { open(item); };
+      attrs.onkeydown = function (e) { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(item); } };
+    }
+    return el('article', attrs, [
       el('div', { class: 'shop-photo' }, [
-        el('img', { src: item.photos[0] || '', alt: item.name, loading: 'lazy' }),
-        sold ? el('span', { class: 'shop-badge', text: 'Sold' }) : (isNew(item) ? el('span', { class: 'shop-badge is-new', text: 'New' }) : null)
+        el('img', { src: item.photos[0] || '', alt: item.name + (sold ? ' (sold)' : ''), loading: 'lazy' }),
+        sold ? el('span', { class: 'shop-badge', text: 'Sold' }) : null
       ]),
       el('div', { class: 'shop-card-copy' }, [
         el('h3', { text: item.name }),
         el('p', { class: 'shop-price', text: sold ? 'Sold for ' + money(item.price) : money(item.price) }),
+        sold && item.description ? el('p', { class: 'shop-card-desc', text: item.description }) : null,
         action(item, false)
       ])
     ]);
