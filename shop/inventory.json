@@ -1,6 +1,18 @@
 {
   "items": [
     {
+      "id": "mounted-wood-sculpture-132106",
+      "name": "Mounted Wood Sculpture",
+      "price": 24900,
+      "shipping": null,
+      "description": "A naturally sculptural piece of figured wood elevated on a minimalist steel pedestal. Intricate grain patterns, flowing contours, and organic imperfections create a striking contrast between nature and modern metalwork.",
+      "photos": [
+        "shop/photos/b64db2dfd0ee733a.jpg"
+      ],
+      "status": "available",
+      "createdAt": "2026-11-18T14:42:40.037Z"
+    },
+    {
       "id": "rustic-feather-holder-c13ccd",
       "name": "Rustic Feather Holder",
       "price": 7900,
