@@ -1,6 +1,18 @@
 {
   "items": [
     {
+      "id": "rustic-feather-holder-c13ccd",
+      "name": "Rustic Feather Holder",
+      "price": 7900,
+      "shipping": null,
+      "description": "A rustic decorative holder crafted from naturally weathered wood, preserving its textured bark, splits, and exposed grain. Designed to display feathers while celebrating the raw beauty and history of the timber.",
+      "photos": [
+        "shop/photos/9539a7012dcaa14b.jpg"
+      ],
+      "status": "available",
+      "createdAt": "2026-11-18T14:39:53.664Z"
+    },
+    {
       "id": "mahogany-catchall-f1eab2",
       "name": "Mahogany Catchall",
       "price": 16900,
