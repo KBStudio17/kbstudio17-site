@@ -122,6 +122,28 @@
   });
   dialog.addEventListener('click', function (e) { if (e.target === dialog) dialog.close(); });
 
+  // Each piece has its own link (…/woodworking.html#piece-<id>) that opens straight to it,
+  // so a specific piece can be shared without giving every piece a separate page.
+  var HASH = '#piece-';
+  function setHash(h) { try { history.replaceState(null, '', location.pathname + location.search + h); } catch (e) {} }
+  var openPiece = open;
+  open = function (item) { openPiece(item); setHash(HASH + item.id); };
+  dialog.addEventListener('close', function () { if (location.hash.indexOf(HASH) === 0) setHash('#shop'); });
+  function openFromLink() {
+    if (location.hash.indexOf(HASH) !== 0) return;
+    var id = decodeURIComponent(location.hash.slice(HASH.length));
+    var item = items.filter(function (i) { return i.id === id; })[0];
+    var shop = document.getElementById('shop');
+    if (!item) { if (shop) shop.scrollIntoView(); return; }
+    var soldOpens = !!root.querySelector('.shop-card.is-sold[role="button"]');
+    if (dialog.open) dialog.close();
+    if (item.status !== 'sold' || soldOpens) open(item);
+    else if (shop) { setHash('#shop'); shop.scrollIntoView(); }
+  }
+  var drawShop = render, linkChecked = false;
+  render = function () { drawShop(); if (!linkChecked && items.length) { linkChecked = true; openFromLink(); } };
+  window.addEventListener('hashchange', openFromLink);
+
   function load() {
     return fetch('shop/inventory.json', { cache: 'no-store' })
       .then(function (r) { return r.json(); })
