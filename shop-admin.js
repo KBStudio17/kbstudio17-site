@@ -95,7 +95,7 @@
     });
     chain.then(function () {
       msg('add-msg', 'Publishing…');
-      return api({ action: 'publish', name: $('name').value, price: $('price').value, shipping: $('shipping').value, description: $('description').value, photos: uploaded });
+      return api({ action: 'publish', name: $('name').value, price: $('price').value, description: $('description').value, photos: uploaded });
     }).then(function (d) {
       $('add-form').reset(); chosen = []; $('previews').replaceChildren();
       msg('add-msg', '“' + d.item.name + '” is published. It will show in the shop in about a minute.', 'good');
@@ -116,7 +116,7 @@
     var img = new Image(); img.alt = ''; img.src = item.photos && item.photos[0] ? item.photos[0] : '';
     var info = document.createElement('div');
     var h = document.createElement('strong'); h.textContent = item.name;
-    var p = document.createElement('span'); p.textContent = (sold ? 'Sold · ' : 'Available · ') + money(item.price) + (Number.isInteger(item.shipping) ? ' · ships ' + money(item.shipping) : ' · pickup only');
+    var p = document.createElement('span'); p.textContent = (sold ? 'Sold · ' : 'Available · ') + money(item.price);
     info.appendChild(h); info.appendChild(p);
     var actions = document.createElement('div'); actions.className = 'admin-actions';
     function b(label, fn) { var x = document.createElement('button'); x.type = 'button'; x.className = 'link-button'; x.textContent = label; x.addEventListener('click', fn); actions.appendChild(x); }

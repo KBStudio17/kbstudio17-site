@@ -29,6 +29,11 @@
     var bodyText = 'Hi KB Studio 17,\n\nI saw "' + item.name + '" in the shop and would like something similar.\n\nSize, wood, finish, or other details:\n\n\nName:\n';
     return 'mailto:' + CONTACT + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(bodyText);
   }
+  function shippingLink(item) {
+    var subject = 'Shipping quote: "' + item.name + '"';
+    var bodyText = 'Hi KB Studio 17,\n\nI would like "' + item.name + '" shipped. Please send me a shipping quote.\n\nShip to (city, state, ZIP):\n\nName:\n';
+    return 'mailto:' + CONTACT + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(bodyText);
+  }
   function action(item, big) {
     var cls = 'button ' + (big ? '' : 'small-button ');
     if (item.status === 'sold') {
@@ -71,9 +76,8 @@
           item.description ? el('p', { class: 'shop-desc', text: item.description }) : null,
           el('p', { class: 'small', text: sold
             ? 'This piece has found a home. Every build depends on the material at hand, so a similar piece will be its own original.'
-            : (Number.isInteger(item.shipping)
-              ? 'Local pickup in Aurora, Colorado, or US shipping for ' + money(item.shipping) + '.'
-              : 'Local pickup in Aurora, Colorado.') + ' Secure checkout by Stripe.' }),
+            : 'Local pickup in Aurora, Colorado. Shipping is available on request for an additional charge. Secure checkout by Stripe.' }),
+          sold ? null : el('a', { class: 'shop-request', href: shippingLink(item), text: 'Ask about shipping this piece' }),
           action(item, true)
         ])
       ])
@@ -142,7 +146,7 @@
   var paid = new URLSearchParams(location.search).get('paid');
   load().then(function () {
     if (!paid) return;
-    say('Thank you! Your payment went through. We will email you shortly to arrange pickup or shipping.', 'good');
+    say('Thank you! Your payment went through. We will email you shortly to arrange pickup.', 'good');
     history.replaceState(null, '', location.pathname + '#shop');
     fetch('/api/confirm?session_id=' + encodeURIComponent(paid))
       .then(function (r) { return r.json(); })
