@@ -1,6 +1,18 @@
 {
   "items": [
     {
+      "id": "mahogany-catchall-f1eab2",
+      "name": "Mahogany Catchall",
+      "price": 16900,
+      "shipping": null,
+      "description": "Hand-carved from solid mahogany, this substantial catchall combines a deliberately rustic interior with a smooth, refined exterior. Natural beetle tracks and contrasting wood tones give every surface distinctive character.",
+      "photos": [
+        "shop/photos/851388dcc41e6792.jpg"
+      ],
+      "status": "available",
+      "createdAt": "2026-11-18T14:38:42.790Z"
+    },
+    {
       "id": "weathered-sculptural-bowl-38d602",
       "name": "Weathered Sculptural Bowl",
       "price": 18500,
