@@ -1,6 +1,21 @@
 {
   "items": [
     {
+      "id": "relic-extra-long-mahogany-catchall-8894e6",
+      "name": "Relic — Extra-Long Mahogany Catchall",
+      "price": 27500,
+      "shipping": null,
+      "description": "Hand-carved from a substantial length of solid mahogany, Relic contrasts a smooth, refined exterior with a rustic, textured interior. Natural beetle galleries, contrasting tones, and distinctive surface markings preserve the wood's history, creating an elegant catchall for everyday essentials or a striking decorative centerpiece.",
+      "photos": [
+        "shop/photos/d69ab1f3ac84e590.jpg",
+        "shop/photos/6a39fa32d3f76a46.jpg",
+        "shop/photos/2d8e81dfbe13a895.jpg",
+        "shop/photos/34e835f9b1423807.jpg"
+      ],
+      "status": "available",
+      "createdAt": "2026-11-18T15:23:27.978Z"
+    },
+    {
       "id": "forest-fire-burned-cedar-candle-holder-773c49",
       "name": "Forest Fire Burned Cedar Candle Holder",
       "price": 16500,
