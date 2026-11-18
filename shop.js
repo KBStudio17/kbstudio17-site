@@ -127,7 +127,24 @@
   var HASH = '#piece-';
   function setHash(h) { try { history.replaceState(null, '', location.pathname + location.search + h); } catch (e) {} }
   var openPiece = open;
-  open = function (item) { openPiece(item); setHash(HASH + item.id); };
+  function shareUrl(item) { return location.origin + '/piece/' + encodeURIComponent(item.id); }
+  function shareButton(item) {
+    var label = 'Share this piece';
+    var b = el('button', { class: 'shop-share', type: 'button', text: label });
+    b.addEventListener('click', function () {
+      var url = shareUrl(item);
+      function done(text) { b.textContent = text; setTimeout(function () { b.textContent = label; }, 2500); }
+      if (navigator.share) { navigator.share({ title: item.name + ' | KB Studio 17 Woodworking', url: url }).catch(function () {}); return; }
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(url).then(function () { done('Link copied'); }, function () { window.prompt('Copy this link:', url); }); return; }
+      window.prompt('Copy this link:', url);
+    });
+    return b;
+  }
+  open = function (item) {
+    openPiece(item); setHash(HASH + item.id);
+    var copy = dialog.querySelector('.shop-dialog-copy');
+    if (copy) copy.appendChild(shareButton(item));
+  };
   dialog.addEventListener('close', function () { if (location.hash.indexOf(HASH) === 0) setHash('#shop'); });
   function openFromLink() {
     if (location.hash.indexOf(HASH) !== 0) return;
