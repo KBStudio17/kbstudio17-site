@@ -12,7 +12,6 @@ module.exports = async (req, res) => {
     if (item.status !== 'available') return res.status(409).json({ error: 'This piece just sold.' });
 
     const origin = `https://${req.headers['x-forwarded-host'] || req.headers.host}`;
-    const ships = Number.isInteger(item.shipping) && item.shipping >= 0;
     const pickup = {
       shipping_rate_data: { type: 'fixed_amount', display_name: 'Local pickup (Aurora, Colorado)', fixed_amount: { amount: 0, currency: 'usd' } },
     };
@@ -36,13 +35,9 @@ module.exports = async (req, res) => {
           },
         },
       }],
-      shipping_options: ships
-        ? [pickup, { shipping_rate_data: { type: 'fixed_amount', display_name: 'Shipping (US)', fixed_amount: { amount: item.shipping, currency: 'usd' } } }]
-        : [pickup],
-      ...(ships ? { shipping_address_collection: { allowed_countries: ['US'] } } : {}),
-      custom_text: { submit: { message: ships
-        ? 'One-of-a-kind piece. Choose local pickup in Aurora, Colorado or shipping. We will email you to arrange it.'
-        : 'One-of-a-kind piece. Local pickup in Aurora, Colorado. We will email you to arrange a time.' } },
+      // Every piece is local pickup. Shipping is quoted by email on request and charged separately.
+      shipping_options: [pickup],
+      custom_text: { submit: { message: 'One-of-a-kind piece. Local pickup in Aurora, Colorado; we will email you to arrange a time. Need it shipped? Email support@kbstudio17.com for a quote before you buy.' } },
     };
     const session = await stripe('/checkout/sessions', params);
     res.status(200).json({ url: session.url });
