@@ -1,6 +1,19 @@
 {
   "items": [
     {
+      "id": "live-edge-palo-santo-81a1df",
+      "name": "Live Edge Palo Santo",
+      "price": 11500,
+      "shipping": null,
+      "description": "A handcrafted palo santo holder featuring warm golden wood, natural contours, and flowing grain. A custom steel plate and upright rest create an industrial contrast, allowing the wood's unique character to remain the centerpiece.",
+      "photos": [
+        "shop/photos/edb344c38f500e01.jpg",
+        "shop/photos/c4d2369cb427714a.jpg"
+      ],
+      "status": "available",
+      "createdAt": "2026-11-18T15:40:14.291Z"
+    },
+    {
       "id": "tides-large-sculptural-wooden-bowl-720bea",
       "name": "Tides — Large Sculptural Wooden Bowl",
       "price": 39500,
