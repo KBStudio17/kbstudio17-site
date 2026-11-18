@@ -57,5 +57,11 @@
       "permanent": false
     }
   ],
-  "ignoreCommand": "git log -1 --pretty=%s | grep -q '^Shop: review \\(received\\|declined\\)'"
+  "ignoreCommand": "git log -1 --pretty=%s | grep -q '^Shop: review \\(received\\|declined\\)'",
+  "rewrites": [
+    {
+      "source": "/piece/:id",
+      "destination": "/api/piece?id=:id"
+    }
+  ]
 }
