@@ -1,6 +1,19 @@
 {
   "items": [
     {
+      "id": "forest-fire-burned-cedar-candle-holder-773c49",
+      "name": "Forest Fire Burned Cedar Candle Holder",
+      "price": 16500,
+      "shipping": null,
+      "description": "A dramatic sweep of naturally weathered wood rises above slender brass supports, creating a striking balance of movement and form. A polished brass tea light cup rests within the organic structure, contrasting beautifully with the rich grain, rugged textures, and natural imperfections of the wood.",
+      "photos": [
+        "shop/photos/08abb28ac14a03ba.jpg",
+        "shop/photos/bc3df60865911545.jpg"
+      ],
+      "status": "available",
+      "createdAt": "2026-11-18T15:19:51.020Z"
+    },
+    {
       "id": "mounted-wood-sculpture-132106",
       "name": "Mounted Wood Sculpture",
       "price": 24900,
