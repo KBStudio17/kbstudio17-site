@@ -1,6 +1,18 @@
 {
   "items": [
     {
+      "id": "burrel-palo-santo-eba63d",
+      "name": "Burrel Palo Santo",
+      "price": 12900,
+      "shipping": null,
+      "description": "A handcrafted palo santo holder featuring richly figured wood with swirling knots and natural voids. A custom steel resting plate provides a striking industrial contrast to the warm, organic wooden base.",
+      "photos": [
+        "shop/photos/caec9c33f6832887.jpg"
+      ],
+      "status": "available",
+      "createdAt": "2026-11-18T14:23:25.569Z"
+    },
+    {
       "id": "cornucopia-1e7396",
       "name": "Cornucopia",
       "price": 13500,
