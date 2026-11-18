@@ -1,6 +1,20 @@
 {
   "items": [
     {
+      "id": "tides-large-sculptural-wooden-bowl-720bea",
+      "name": "Tides — Large Sculptural Wooden Bowl",
+      "price": 39500,
+      "shipping": null,
+      "description": "Carved from a substantial piece of naturally figured hardwood, Tides celebrates the movement and character of the original timber. Flowing contours, dramatic grain patterns, natural cracks, and an organically carved basin create a sculptural centerpiece that blurs the line between functional woodworking and fine art.\n\nWhy this price: The unusual asymmetrical shape and substantial hardwood construction make it more of a statement piece than a conventional wooden bowl. I would sell it primarily as decorative art.",
+      "photos": [
+        "shop/photos/9ff6143d93887faa.jpg",
+        "shop/photos/ade85e57d371d145.jpg",
+        "shop/photos/a9cccc6f74748922.jpg"
+      ],
+      "status": "available",
+      "createdAt": "2026-11-18T15:25:05.960Z"
+    },
+    {
       "id": "relic-extra-long-mahogany-catchall-8894e6",
       "name": "Relic — Extra-Long Mahogany Catchall",
       "price": 27500,
