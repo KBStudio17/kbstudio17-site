@@ -1,6 +1,19 @@
 {
   "items": [
     {
+      "id": "the-claw-sculptural-wood-stone-68ac5a",
+      "name": "The Claw - Sculptural Wood & Stone",
+      "price": 39500,
+      "shipping": null,
+      "description": "celebration of nature’s untamed forms, Undertow pairs richly figured wood with a dark, naturally textured stone base. Sweeping grain, intricate folds, and weathered cavities reveal dramatically different compositions from every angle.\n\nA one-of-a-kind sculpture where the movement of wood meets the stillness of stone.",
+      "photos": [
+        "shop/photos/6aa0fea4bcb66d13.jpg",
+        "shop/photos/ed9a51308506d3fa.jpg"
+      ],
+      "status": "available",
+      "createdAt": "2026-11-20T19:44:06.091Z"
+    },
+    {
       "id": "live-edge-palo-santo-81a1df",
       "name": "Live Edge Palo Santo",
       "price": 11500,
