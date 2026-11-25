@@ -194,7 +194,7 @@
   var paid = new URLSearchParams(location.search).get('paid');
   load().then(function () {
     if (!paid) return;
-    say('Thank you! Your payment went through. We will email you shortly to arrange pickup.', 'good');
+    say('Thank you! Your payment went through. I will email you shortly to arrange pickup.', 'good');
     history.replaceState(null, '', location.pathname + '#shop');
     fetch('/api/confirm?session_id=' + encodeURIComponent(paid))
       .then(function (r) { return r.json(); })
