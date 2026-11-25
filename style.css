@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica:ital@1&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
 
 /* KB Studio 17: light, nature-led theme. Paper, moss, bark and clay. */
 :root{
@@ -26,11 +26,11 @@ p{margin:0 0 1em}
 .small,.fine-print{font-size:.9rem;color:var(--muted)}
 
 /* Header */
-.site-header{position:sticky;top:0;z-index:10;min-height:76px;padding:10px clamp(18px,5vw,64px);display:flex;align-items:center;justify-content:space-between;gap:24px;background:rgba(245,242,232,.93);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
-.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
-.brand-mark{width:46px;height:43px;flex:none;display:block}
-.brand strong{display:block;font-family:var(--serif);font-weight:600;font-size:1.3rem;line-height:1.1;letter-spacing:-.01em}
-.brand small{display:block;margin-top:2px;color:var(--muted);font-size:.8rem}
+.site-header{position:sticky;top:0;z-index:10;min-height:96px;padding:10px clamp(18px,5vw,64px);display:flex;align-items:center;justify-content:space-between;gap:24px;background:rgba(245,242,232,.93);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:16px;text-decoration:none;color:var(--text)}
+.brand-mark{width:72px;height:67px;flex:none;display:block}
+.brand strong{display:block;font-family:'IM Fell DW Pica',var(--serif);font-style:italic;font-weight:400;font-size:clamp(2.1rem,2.9vw,2.6rem);line-height:1;letter-spacing:0}
+.brand small{display:block;margin-top:4px;color:var(--muted);font-size:.9rem}
 .nav{display:flex;align-items:center;gap:clamp(14px,2vw,28px);flex-wrap:wrap}
 .nav a{color:var(--text);text-decoration:none;font-weight:500;font-size:.96rem;padding:6px 0;border-bottom:2px solid transparent}
 .nav a:hover,.nav a[aria-current="page"]{color:var(--moss-strong);border-bottom-color:var(--leaf)}
@@ -142,7 +142,7 @@ a.feature-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);co
 .site-footer a:hover{color:#fff;text-decoration-thickness:2px}
 
 /* Woodworking shop */
-.shop{margin:clamp(44px,6vw,64px) 0;scroll-margin-top:100px}
+.shop{margin:clamp(44px,6vw,64px) 0;scroll-margin-top:120px}
 .shop-mark{display:block;width:84px;height:auto;margin:0 0 16px}
 .shop-kinds{margin-top:0}
 .shop-terms{margin:14px 0 0;color:var(--muted);font-size:.96rem}
@@ -194,7 +194,7 @@ button.button.is-soldout,button.button.is-soldout:disabled{background:#e7e5d8;bo
 .shop-close:hover{background:var(--sage)}
 
 /* Reviews */
-.reviews{margin:0 0 clamp(44px,6vw,64px);scroll-margin-top:100px}
+.reviews{margin:0 0 clamp(44px,6vw,64px);scroll-margin-top:120px}
 .reviews-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .reviews-summary{margin:10px 0 0;color:var(--muted)}
 .stars{color:#a86a12;letter-spacing:.1em;font-size:1.05rem;white-space:nowrap}
