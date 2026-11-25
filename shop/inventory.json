@@ -1,6 +1,19 @@
 {
   "items": [
     {
+      "id": "forty-two-redwood-end-grain-wall-art-1a188f",
+      "name": "Forty-Two: Redwood End-Grain Wall Art",
+      "price": 34900,
+      "shipping": null,
+      "description": "Handcrafted from 42 individual redwood blocks, Forty-Two transforms reclaimed lumber into a striking geometric composition. Dense growth rings, warm heartwood, natural color variations, and subtle imperfections form an intricate pattern within a rugged, weathered wooden frame.\n\nEach block reveals a different chapter of the tree’s growth, creating a one-of-a-kind piece that celebrates the character and history of natural wood. 25”x22”",
+      "photos": [
+        "shop/photos/9c51ae1bce79a316.jpg",
+        "shop/photos/b78d7e610aadca32.jpg"
+      ],
+      "status": "available",
+      "createdAt": "2026-11-25T22:07:11.192Z"
+    },
+    {
       "id": "the-claw-sculptural-wood-stone-68ac5a",
       "name": "The Claw - Sculptural Wood & Stone",
       "price": 39500,
