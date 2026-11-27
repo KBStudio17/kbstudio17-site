@@ -78,8 +78,9 @@
         "shop/photos/08abb28ac14a03ba.jpg",
         "shop/photos/bc3df60865911545.jpg"
       ],
-      "status": "available",
-      "createdAt": "2026-11-18T15:19:51.020Z"
+      "status": "sold",
+      "createdAt": "2026-11-18T15:19:51.020Z",
+      "soldAt": "2026-11-27T00:22:24.286Z"
     },
     {
       "id": "mounted-wood-sculpture-132106",
